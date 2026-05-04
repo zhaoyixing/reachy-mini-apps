@@ -1,0 +1,5 @@
+reachy-mini>=1.7.0
+numpy
+websocket-client>=1.8.0
+python-dotenv
+soundfile>=0.12.0
