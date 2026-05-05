@@ -202,7 +202,7 @@ class MotionController:
         self._set_target(head, (np.radians(ant_deg), np.radians(-ant_deg)), 0.0)
 
     def _do_listening(self, t: float) -> None:
-        """看向声源 + 天线更活跃。"""
+        """安静倾听：只转向声源，其余保持静止。"""
         doa = None
         try:
             doa = self.robot.media.get_DoA()
@@ -216,18 +216,14 @@ class MotionController:
                 yaw_deg = np.degrees(angle)
                 self._last_doa_yaw_deg = yaw_deg
 
-        z_mm = 3.0 * np.sin(2 * np.pi * 0.1 * t)
-        ant_deg = 20.0 * np.sin(2 * np.pi * 0.8 * t)
-        head = create_head_pose(0, 0, z_mm, 0, 0, yaw_deg, degrees=True, mm=True)
-        self._set_target(head, (np.radians(ant_deg), np.radians(-ant_deg)), 0.0)
+        # 倾听时完全静止，不摇晃、不摆天线
+        head = create_head_pose(0, 0, 0, 0, 0, yaw_deg, degrees=True, mm=True)
+        self._set_target(head, (0.0, 0.0), 0.0)
 
     def _do_thinking(self, t: float) -> None:
-        """头部快速左右摆动 + 天线同向快速摆动。"""
-        yaw_deg = 15.0 * np.sin(2 * np.pi * 1.5 * t)
-        pitch_deg = 8.0 * np.sin(2 * np.pi * 1.2 * t)
-        ant_deg = 30.0 * np.sin(2 * np.pi * 2.0 * t)
-        head = create_head_pose(0, 0, 0, 0, pitch_deg, yaw_deg, degrees=True, mm=True)
-        self._set_target(head, (np.radians(ant_deg), np.radians(ant_deg)), 0.0)
+        """思考时保持静止，不摇晃。"""
+        head = create_head_pose(0, 0, 0, 0, 0, 0, degrees=True, mm=True)
+        self._set_target(head, (0.0, 0.0), 0.0)
 
     def _do_speaking(self, _t: float) -> None:
         """优先播放情绪动作，其次语音驱动的头部晃动（Sway）+ 轻微天线活动。"""
