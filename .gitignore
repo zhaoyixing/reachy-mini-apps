@@ -1,0 +1,17 @@
+# 密钥和配置
+.env
+*.env
+.env.*
+
+# Python 编译产物
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# 模型文件
+models/
+
+# 系统文件
+.DS_Store
+*.log
